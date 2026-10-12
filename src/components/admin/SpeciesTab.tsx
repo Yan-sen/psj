@@ -3,7 +3,7 @@ import { trpc } from "@/providers/trpc";
 import type { AppRouter } from "../../../api/router";
 import type { inferRouterOutputs } from "@trpc/server";
 
-type SpeciesRow = inferRouterOutputs<AppRouter>["species"]["list"][number];
+type SpeciesRow = inferRouterOutputs<AppRouter>["species"]["adminList"][number];
 
 const inp =
   "border border-neutral-300 px-2 py-1 text-sm outline-none focus:border-[#c9a227]";
@@ -41,9 +41,12 @@ const NUMERIC_PRICE = /^\d+(\.\d+)?$/;
 
 export default function SpeciesTab({ pw }: { pw: string }) {
   const utils = trpc.useUtils();
-  const list = trpc.species.list.useQuery({});
+  const list = trpc.species.adminList.useQuery({ password: pw });
   const cats = trpc.categories.list.useQuery();
-  const invalidate = () => utils.species.list.invalidate();
+  const invalidate = () => {
+    utils.species.list.invalidate();
+    utils.species.adminList.invalidate();
+  };
   const update = trpc.species.update.useMutation();
   const create = trpc.species.create.useMutation({
     onSuccess: () => {

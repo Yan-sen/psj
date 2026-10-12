@@ -23,6 +23,11 @@ import {
   updateSpecies,
 } from "./queries/species";
 
+// 公开接口数据清洗：标"询价"（showPrice=false）的条目绝不返回真实价格
+function sanitizePublic<T extends { showPrice: boolean; priceUsd: string | null }>(row: T): T {
+  return row.showPrice ? row : { ...row, priceUsd: null };
+}
+
 const speciesInput = z.object({
   category: z.string(),
   groupName: z.string(),
@@ -53,10 +58,19 @@ export const appRouter = createRouter({
           featuredOnly: z.boolean().optional(),
         })
       )
-      .query(({ input }) => listSpecies(input)),
+      .query(async ({ input }) => (await listSpecies(input)).map(sanitizePublic)),
     byId: publicQuery
       .input(z.object({ id: z.number() }))
-      .query(({ input }) => getSpeciesById(input.id)),
+      .query(async ({ input }) => {
+        const row = await getSpeciesById(input.id);
+        return row ? sanitizePublic(row) : row;
+      }),
+    adminList: publicQuery
+      .input(z.object({ password: z.string() }))
+      .query(({ input }) => {
+        assertAdmin(input.password);
+        return listSpecies({});
+      }),
     categoryCounts: publicQuery.query(() => categoryCounts()),
     update: publicQuery
       .input(z.object({ password: z.string(), id: z.number(), data: speciesInput.partial() }))
@@ -167,7 +181,21 @@ export const appRouter = createRouter({
   }),
 
   settings: createRouter({
-    all: publicQuery.query(() => getAllSettings()),
+    // 公开接口只放行页面展示需要的非敏感键；smtp_pass 等机密永不出接口
+    all: publicQuery.query(async () => {
+      const all = await getAllSettings();
+      const pub: Record<string, string> = {};
+      for (const [k, v] of Object.entries(all)) {
+        if (k.startsWith("footer_") || k.startsWith("social_") || k === "head_code") pub[k] = v;
+      }
+      return pub;
+    }),
+    adminAll: publicQuery
+      .input(z.object({ password: z.string() }))
+      .query(({ input }) => {
+        assertAdmin(input.password);
+        return getAllSettings();
+      }),
     set: publicQuery
       .input(z.object({ password: z.string(), key: z.string(), value: z.string() }))
       .mutation(({ input }) => {

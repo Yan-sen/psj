@@ -209,9 +209,12 @@ const SETTING_LABELS: Record<(typeof FOOTER_KEYS)[number], { label: string; fall
 
 function SettingsTab({ pw }: { pw: string }) {
   const utils = trpc.useUtils();
-  const all = trpc.settings.all.useQuery();
+  const all = trpc.settings.adminAll.useQuery({ password: pw });
   const setSetting = trpc.settings.set.useMutation({
-    onSuccess: () => utils.settings.all.invalidate(),
+    onSuccess: () => {
+      utils.settings.all.invalidate();
+      utils.settings.adminAll.invalidate();
+    },
   });
   const [vals, setVals] = useState<Record<string, string>>({});
   useEffect(() => {
