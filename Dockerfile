@@ -7,18 +7,19 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-
 ENV NODE_ENV=development
 
-# npm 在该网络下偶发 "Exit handler never called" 崩溃：用 npmmirror 源 + 失败重试
-RUN npm config set registry https://registry.npmmirror.com \
-  && (npm ci --include=dev || npm ci --include=dev || npm ci --include=dev)
+# npm 对本项目依赖树会崩溃（Exit handler never called），改用 pnpm
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+COPY package.json ./
+
+RUN pnpm install
 RUN ./node_modules/.bin/vite --version
 
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
 
 ENV NODE_ENV=production
 ENV CHROME_PATH=/usr/bin/chromium
