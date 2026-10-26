@@ -11,6 +11,9 @@ COPY package.json package-lock.json* ./
 
 ENV NODE_ENV=development
 
+# npm 10.8.2 在该环境有 "Exit handler never called" bug，先升级
+RUN npm install -g npm@10.9.2
+
 RUN npm ci --include=dev
 RUN ./node_modules/.bin/vite --version
 
