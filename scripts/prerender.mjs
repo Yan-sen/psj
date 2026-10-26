@@ -54,6 +54,21 @@ async function main() {
   }
   await browser.close();
   console.log(`[prerender] 完成 ${ok}/${routes.length}`);
+
+  // 同步生成完整 sitemap.xml（静态页 + 全部商品页），商品增删自动反映
+  const PRIORITY = {
+    "/": "1.0", "/species": "0.9", "/availability": "0.8", "/inquiry": "0.7",
+    "/reptile-export-china": "0.8", "/cites-reptile-export": "0.8",
+    "/chinese-native-reptiles": "0.8", "/wholesale-reptiles": "0.8",
+    "/shipping": "0.6", "/compliance": "0.6", "/about": "0.6",
+  };
+  const urls = [
+    ...staticRoutes.map((r) => `  <url><loc>https://pashijia.com${r}</loc><priority>${PRIORITY[r] || "0.6"}</priority></url>`),
+    ...ids.map((id) => `  <url><loc>https://pashijia.com/species/${id}</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>`),
+  ];
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
+  fs.writeFileSync(path.resolve(process.cwd(), "dist/public/sitemap.xml"), sitemap);
+  console.log(`[prerender] sitemap.xml 已生成，共 ${urls.length} 个 URL`);
 }
 
 main().catch((e) => {
