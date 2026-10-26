@@ -11,8 +11,8 @@ COPY package.json package-lock.json* ./
 
 ENV NODE_ENV=development
 
-RUN npm install --include=dev --no-package-lock
-RUN npm install --save-dev vite@^7.2.4 --no-package-lock
+RUN npm ci --include=dev
+RUN npm install --save-dev vite@^7.2.4
 RUN ./node_modules/.bin/vite --version
 
 COPY . .
