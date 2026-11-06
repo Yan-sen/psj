@@ -48,6 +48,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Hamm show pre-order banner */}
+      <section className="bg-[#c9a227] text-[#06162d]">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-8 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.25em]">{t("hamm.badge")}</div>
+            <h2 className="mt-2 font-serif-display text-2xl font-bold md:text-3xl">{t("hamm.title")}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#06162d]/80">{t("hamm.text")}</p>
+            <div className="mt-3 inline-block border border-[#06162d] px-3 py-1 text-xs font-bold uppercase tracking-wider">
+              {t("hamm.deadline")}
+            </div>
+          </div>
+          <Link
+            to="/inquiry"
+            className="shrink-0 bg-[#06162d] px-6 py-3 text-sm font-semibold uppercase tracking-wider text-[#c9a227] hover:bg-[#0c2447]"
+          >
+            {t("hamm.cta")}
+          </Link>
+        </div>
+      </section>
+
       {/* Trust strip */}
       <section className="border-b border-neutral-200">
         <div className="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-neutral-200 text-center md:grid-cols-4">
