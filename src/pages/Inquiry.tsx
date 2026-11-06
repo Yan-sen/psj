@@ -88,6 +88,11 @@ export default function Inquiry() {
     <div className="mx-auto max-w-xl px-4 py-10">
       <h1 className="font-serif-display text-3xl font-bold">{t("i.title")}</h1>
 
+      {/* Hamm show pickup notice */}
+      <div className="mt-4 border border-[#c9a227] bg-[#c9a227]/10 px-4 py-3 text-sm leading-6 text-[#06162d]">
+        {t("hamm.inq")}
+      </div>
+
       {/* 已选物种清单 */}
       {selected.length > 0 ? (
         <div className="mt-4 border border-neutral-200">

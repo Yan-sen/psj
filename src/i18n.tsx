@@ -41,6 +41,10 @@ const dict = {
   ],
   "hamm.deadline": ["Pre-order deadline: November 30, 2026", "预定截止：2026年11月30日"],
   "hamm.cta": ["Reserve Now", "立即预定"],
+  "hamm.inq": [
+    "🦎 Hamm show pickup: collecting your order at Terraristika Hamm (December 2026)? Mention \"Hamm pickup\" in your message below — pre-orders close November 30.",
+    "🦎 展会取货提示：如您计划在12月德国 Hamm 爬宠展现场取货，请在下方留言中注明「Hamm 取货」——预定截止 11月30日。",
+  ],
   "home.intro": [
     "Henan Pashijia Snake Industry Co., Ltd. specializes in Chinese reptiles and rare species — captive-bred stock, full CITES export permits, IATA-standard live animal packing, and air freight to more than 20 countries and regions. Venomous species available to licensed buyers.",
     "河南省爬世家蛇业有限公司专注中国爬宠及珍稀动物，人工繁育货源，全程办理 CITES 出口许可证，IATA 标准活体包装，已出口全球 20 多个国家与地区。毒蛇类目仅面向持证买家。",
