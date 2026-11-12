@@ -34,6 +34,10 @@ export function serveStaticFiles(app: App) {
       } catch {}
       const indexPath = path.resolve(distPath, "index.html");
       const content = fs.readFileSync(indexPath, "utf-8");
+      // 物种详情页没有预渲染快照 = 该物种不存在，返回真实 404（避免谷歌判软404）
+      if (/^\/species\/\d+\/?$/.test(c.req.path)) {
+        return c.html(content, 404);
+      }
       return c.html(content);
     }
     return c.json({ error: "Not Found" }, 404);
